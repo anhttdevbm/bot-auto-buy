@@ -1,0 +1,39 @@
+{"level":"info","message":"Logging in with email:","timestamp":"2025-06-15T05:25:43.117Z"}
+{"level":"info","message":"Main site loaded, now trying login page...","timestamp":"2025-06-15T05:25:44.613Z"}
+{"level":"info","message":"Login page loaded, checking for elements...","timestamp":"2025-06-15T05:25:49.412Z"}
+{"level":"info","message":"Login form found","timestamp":"2025-06-15T05:25:49.446Z"}
+{"level":"info","message":"Filled login form, clicking submit...","timestamp":"2025-06-15T05:25:50.496Z"}
+{"level":"info","message":"Navigation timeout, but continuing...","timestamp":"2025-06-15T05:25:54.788Z"}
+{"level":"info","message":"Login successful","timestamp":"2025-06-15T05:25:54.794Z"}
+{"level":"info","message":"Checking product with SKU:","timestamp":"2025-06-15T05:25:54.797Z"}
+{"level":"info","message":"Fetching product info for SKU:","timestamp":"2025-06-15T05:25:54.798Z"}
+{"brand":"DHC","deliveryInfo":"今から17時間と34分以内のご注文で、2025年6月16日月曜日までにお届け","level":"info","message":"Product info:","name":"持続型ビオチン 60粒入（60日分）","points":"69 ゴールドポイント（10％還元）","price":"687","rating":4.25,"reviewCount":88,"sku":"100000001006404769","stockStatus":"在庫あり","timestamp":"2025-06-15T05:25:57.733Z","url":"https://www.yodobashi.com/product/100000001006404769/"}
+{"level":"info","message":"Product added to cart","timestamp":"2025-06-15T05:25:59.019Z"}
+{"level":"info","message":"Checkout completed","timestamp":"2025-06-15T05:26:10.941Z"}
+{"code":"ENOENT","errno":-4058,"level":"error","message":"Failed to log order: ENOENT: no such file or directory, open 'E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx'","path":"E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx","stack":"Error: ENOENT: no such file or directory, open 'E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx'\n    at Object.openSync (node:fs:562:18)\n    at Object.readFileSync (node:fs:446:35)\n    at read_binary (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:3153:44)\n    at readSync (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:23698:69)\n    at Object.readFileSync (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:23738:9)\n    at ExcelManager.logOrder (E:\\Documents\\Freelance\\bot-auto-buy\\utils\\excelManager.js:23:38)\n    at YodobashiBot.monitorProducts (E:\\Documents\\Freelance\\bot-auto-buy\\bot.js:106:35)\n    at async main (E:\\Documents\\Freelance\\bot-auto-buy\\bot.js:147:5)","syscall":"open","timestamp":"2025-06-15T05:26:10.942Z"}
+{"level":"info","message":"Logging in with email:","timestamp":"2025-06-15T05:33:04.829Z"}
+{"level":"info","message":"Main site loaded, now trying login page...","timestamp":"2025-06-15T05:33:06.411Z"}
+{"level":"info","message":"Login page loaded, checking for elements...","timestamp":"2025-06-15T05:33:11.377Z"}
+{"level":"info","message":"Login form found","timestamp":"2025-06-15T05:33:11.402Z"}
+{"level":"info","message":"Filled login form, clicking submit...","timestamp":"2025-06-15T05:33:12.423Z"}
+{"level":"info","message":"Navigation timeout, but continuing...","timestamp":"2025-06-15T05:33:16.812Z"}
+{"level":"info","message":"Login successful","timestamp":"2025-06-15T05:33:16.815Z"}
+{"level":"info","message":"Checking product with SKU:","timestamp":"2025-06-15T05:33:16.819Z"}
+{"level":"info","message":"Fetching product info for SKU:","timestamp":"2025-06-15T05:33:16.819Z"}
+{"brand":"DHC","deliveryInfo":"今から17時間と26分以内のご注文で、2025年6月16日月曜日までにお届け","level":"info","message":"Product info:","name":"持続型ビオチン 60粒入（60日分）","points":"69 ゴールドポイント（10％還元）","price":"687","rating":4.25,"reviewCount":88,"sku":"100000001006404769","stockStatus":"在庫あり","timestamp":"2025-06-15T05:33:19.726Z","url":"https://www.yodobashi.com/product/100000001006404769/"}
+{"level":"info","message":"Product added to cart","timestamp":"2025-06-15T05:33:20.897Z"}
+{"level":"info","message":"Checkout completed","timestamp":"2025-06-15T05:33:36.129Z"}
+{"code":"ENOENT","errno":-4058,"level":"error","message":"Failed to log order: ENOENT: no such file or directory, open 'E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx'","path":"E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx","stack":"Error: ENOENT: no such file or directory, open 'E:\\Documents\\Freelance\\bot-auto-buy\\data\\order_log.xlsx'\n    at Object.openSync (node:fs:562:18)\n    at Object.readFileSync (node:fs:446:35)\n    at read_binary (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:3153:44)\n    at readSync (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:23698:69)\n    at Object.readFileSync (E:\\Documents\\Freelance\\bot-auto-buy\\node_modules\\xlsx\\xlsx.js:23738:9)\n    at ExcelManager.logOrder (E:\\Documents\\Freelance\\bot-auto-buy\\utils\\excelManager.js:23:38)\n    at YodobashiBot.monitorProducts (E:\\Documents\\Freelance\\bot-auto-buy\\bot.js:106:35)\n    at async main (E:\\Documents\\Freelance\\bot-auto-buy\\bot.js:147:5)","syscall":"open","timestamp":"2025-06-15T05:33:36.131Z"}
+{"level":"info","message":"Logging in with email:","timestamp":"2025-06-15T05:35:19.022Z"}
+{"level":"info","message":"Main site loaded, now trying login page...","timestamp":"2025-06-15T05:35:21.409Z"}
+{"level":"info","message":"Login page loaded, checking for elements...","timestamp":"2025-06-15T05:35:26.645Z"}
+{"level":"info","message":"Login form found","timestamp":"2025-06-15T05:35:26.669Z"}
+{"level":"info","message":"Filled login form, clicking submit...","timestamp":"2025-06-15T05:35:27.702Z"}
+{"level":"info","message":"Navigation timeout, but continuing...","timestamp":"2025-06-15T05:35:31.811Z"}
+{"level":"info","message":"Login successful","timestamp":"2025-06-15T05:35:31.814Z"}
+{"level":"info","message":"Checking product with SKU:","timestamp":"2025-06-15T05:35:31.817Z"}
+{"level":"info","message":"Fetching product info for SKU:","timestamp":"2025-06-15T05:35:31.818Z"}
+{"brand":"DHC","deliveryInfo":"今から17時間と24分以内のご注文で、2025年6月16日月曜日までにお届け","level":"info","message":"Product info:","name":"持続型ビオチン 60粒入（60日分）","points":"69 ゴールドポイント（10％還元）","price":"687","rating":4.25,"reviewCount":88,"sku":"100000001006404769","stockStatus":"在庫あり","timestamp":"2025-06-15T05:35:34.709Z","url":"https://www.yodobashi.com/product/100000001006404769/"}
+{"level":"info","message":"Product added to cart","timestamp":"2025-06-15T05:35:36.095Z"}
+{"level":"info","message":"Checkout completed","timestamp":"2025-06-15T05:35:49.462Z"}
+{"level":"info","message":"Order logged successfully","timestamp":"2025-06-15T05:35:49.471Z"}

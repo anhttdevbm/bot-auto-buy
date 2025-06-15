@@ -1,0 +1,19 @@
+{
+  "name": "yodobashi-bot",
+  "version": "1.0.0",
+  "description": "Yodobashi auto-buy bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "playwright": "^1.41.2",
+    "commander": "^11.1.0",
+    "winston": "^3.11.0",
+    "crypto-js": "^4.2.0",
+    "xlsx": "^0.18.5",
+    "dotenv": "^16.4.1",
+    "cheerio": "^1.0.0-rc.12",
+    "2captcha-node": "^1.0.0"
+  }
+}
