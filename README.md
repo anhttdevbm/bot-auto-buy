@@ -1,6 +1,6 @@
-# Yodobashi Auto Buy Bot
+# Auto Buy Bot
 
-Bot tự động mua hàng trên Yodobashi.com
+Bot tự động mua hàng trên Yodobashi.com và BicCamera.com
 
 ## Cài đặt nhanh
 
@@ -11,7 +11,7 @@ Bot tự động mua hàng trên Yodobashi.com
 
 2. Tải project về máy và giải nén
 
-3. Double-click vào file `start-bot.bat`
+3. Double-click vào file `start-bot.bat` (yodobashi), `start-biccamera.bat` (BicCamera.com)
    - Bot sẽ tự động cài đặt các thư viện cần thiết
    - Tạo các thư mục cần thiết
    - Chạy bot
@@ -19,17 +19,21 @@ Bot tự động mua hàng trên Yodobashi.com
 ## Cấu hình
 
 1. Tạo file `config.xlsx` với các cột:
-   - Email: Email đăng nhập Yodobashi
+   - Email: Email đăng nhập
    - Password: Mật khẩu đăng nhập
    - Card: Thông tin thẻ thanh toán
    - Address: Địa chỉ giao hàng
    - URL: Link sản phẩm cần mua
 
+2. Chọn bot muốn chạy:
+   - Yodobashi: `node bot.js --excel config.xlsx`
+   - BicCamera: `node bicCameraBot.js --excel biccamera.xlsx`
+
 ## Lưu ý quan trọng
 
 1. Đảm bảo:
    - Đã cài đặt Node.js
-   - Có tài khoản Yodobashi
+   - Có tài khoản trên website tương ứng
    - Kết nối mạng ổn định
 
 2. Kiểm tra:
@@ -39,6 +43,7 @@ Bot tự động mua hàng trên Yodobashi.com
 3. Nếu gặp lỗi:
    - Kiểm tra logs trong thư mục logs/
    - Kiểm tra file data/order_log.xlsx
+   - Kiểm tra file error.log
 
 ## Hướng dẫn cho Developer
 
@@ -54,12 +59,16 @@ npx playwright install chromium
 
 3. Chạy trong chế độ development:
 ```bash
+# Cho Yodobashi
 node bot.js --excel config.xlsx
+
+# Cho BicCamera
+node bicCameraBot.js --excel config.xlsx
 ```
 
 4. Cấu trúc project:
 ```
-yodobashi-bot/
+auto-buy-bot/
 ├── config/
 │   └── logger.js          # Cấu hình logging
 ├── services/
@@ -71,7 +80,8 @@ yodobashi-bot/
 │   └── excelManager.js    # Xử lý file Excel
 ├── .env                   # Cấu hình môi trường
 ├── package.json          # Dependencies
-├── bot.js               # File chính
+├── bot.js               # Bot Yodobashi
+├── bicCameraBot.js      # Bot BicCamera
 └── config.xlsx          # Cấu hình bot
 ```
 
@@ -79,6 +89,7 @@ yodobashi-bot/
    - Logs được lưu trong thư mục `logs/`
    - Sử dụng `logger.debug()` để debug
    - Kiểm tra file `data/order_log.xlsx` để xem lịch sử đơn hàng
+   - Kiểm tra file `error.log` để xem lỗi chi tiết
 
 6. Phát triển:
    - Thêm tính năng mới trong thư mục `services/`
@@ -93,6 +104,7 @@ yodobashi-bot/
 - Ghi log chi tiết vào Excel
 - Mã hóa dữ liệu nhạy cảm
 - Xử lý lỗi thông minh
+- Hỗ trợ nhiều website (Yodobashi, BicCamera)
 
 ## Xử lý lỗi
 
@@ -109,6 +121,7 @@ Bot ghi log vào:
 - Console (màn hình)
 - File Excel (data/order_log.xlsx)
 - File log chi tiết (logs/)
+- File error.log (lỗi chi tiết)
 
 ## Khắc phục sự cố
 
@@ -129,11 +142,13 @@ Bot ghi log vào:
    - Kiểm tra Node.js đã cài đặt chưa
    - Kiểm tra các dependencies đã cài đặt đầy đủ chưa
    - Kiểm tra file config.xlsx có đúng định dạng không
+   - Kiểm tra file error.log để xem lỗi chi tiết
 
 ## Hỗ trợ
 
 Nếu cần hỗ trợ thêm, vui lòng:
 1. Kiểm tra logs trong thư mục logs/
 2. Kiểm tra file order_log.xlsx
-3. Chụp ảnh màn hình lỗi
-4. Liên hệ hỗ trợ với thông tin chi tiết 
+3. Kiểm tra file error.log
+4. Chụp ảnh màn hình lỗi
+5. Liên hệ hỗ trợ với thông tin chi tiết 
