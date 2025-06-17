@@ -30,7 +30,6 @@ class BaseBot {
                 '--disable-blink-features=AutomationControlled',
                 '--disable-features=IsolateOrigins,site-per-process',
                 '--disable-site-isolation-trials',
-                '--disable-http2'
             ]
         });
         

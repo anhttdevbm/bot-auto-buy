@@ -8,8 +8,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/bot.js",
-            "args": ["--excel", "config.xlsx"],
+            "program": "${workspaceFolder}/bicCameraBot.js",
+            "args": ["--excel", "biccamera.xlsx"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }
