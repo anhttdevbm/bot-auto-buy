@@ -1,22 +1,164 @@
 const { program } = require('commander');
+const path = require('path');
+const os = require('os');
+const { chromium } = require('playwright');
 const logger = require('./config/logger');
 const BaseBot = require('./services/baseBot');
 const BicCameraAuthService = require('./services/bicCameraAuthService');
 const BicCameraProductService = require('./services/bicCameraProductService');
 const BicCameraCheckoutService = require('./services/bicCameraCheckoutService');
+const SessionManager = require('./utils/sessionManager');
+const ExcelManager = require('./utils/excelManager');
 
-class BicCameraBot extends BaseBot {
+class BicCameraBot {
     constructor(config) {
-        super(config);
+        this.config = config;
+        this.sessionManager = new SessionManager();
+        this.excelManager = new ExcelManager(config.excel);
+        this.context = null;
     }
 
     async initialize() {
-        await super.initialize();
+        try {
+            // Get Chrome user data directory based on OS
+            const userDataDir = path.join(os.homedir(), 'AppData', 'Local', 'Google', 'Chrome', 'User Data', 'Profile 1');
+            
+            // Launch browser with persistent context
+            this.context = await chromium.launchPersistentContext(userDataDir, {
+                headless: false,
+                // channel: 'chrome',
+                args: [
+                    '--disable-web-security',
+                    '--disable-features=IsolateOrigins,site-per-process',
+                    '--disable-site-isolation-trials',
+                    '--disable-setuid-sandbox',
+                    '--no-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--disable-gpu',
+                    '--disable-blink-features=AutomationControlled'
+                ],
+                viewport: { width: 1920, height: 1080 },
+                locale: 'ja-JP',
+                timezoneId: 'Asia/Tokyo',
+                geolocation: { longitude: 139.7670, latitude: 35.6814 },
+                permissions: ['geolocation'],
+                ignoreHTTPSErrors: true,
+                bypassCSP: true,
+                hasTouch: true,
+                isMobile: false,
+                deviceScaleFactor: 1,
+                colorScheme: 'light',
+                reducedMotion: 'no-preference',
+                forcedColors: 'none'
+            });
+
+            this.page = await this.context.newPage();
+            await this.setupPage();
+
+            this.authService = new BicCameraAuthService(this.page);
+            this.productService = new BicCameraProductService(this.page);
+            this.checkoutService = new BicCameraCheckoutService(this.page);
+        } catch (error) {
+            logger.error('Failed to initialize browser:', error);
+            throw error;
+        }
+    }
+
+    async setupPage() {
+        await this.page.addInitScript(() => {
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => false
+            });
+            window.navigator.chrome = {
+                runtime: {},
+            };
+            const originalQuery = window.navigator.permissions.query;
+            window.navigator.permissions.query = (parameters) => (
+                parameters.name === 'notifications' ?
+                    Promise.resolve({ state: Notification.permission }) :
+                    originalQuery(parameters)
+            );
+        });
+
+        this.context.setDefaultTimeout(60000);
         
-        // Initialize BicCamera-specific services
-        this.authService = new BicCameraAuthService(this.page);
-        this.productService = new BicCameraProductService(this.page);
-        this.checkoutService = new BicCameraCheckoutService(this.page);
+        await this.page.setExtraHTTPHeaders({
+            'Accept-Language': 'ja-JP,ja;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        });
+    }
+
+    async monitorProducts(account, productUrls) {
+        // Split URLs by comma and trim whitespace
+        const urls = productUrls.split(',').map(url => url.trim());
+        
+        for (const url of urls) {
+            const productInfo = await this.productService.checkProduct(url);
+            if (productInfo) {
+                await this.checkoutService.addToCart();
+                await this.checkoutService.checkout(account.Card, account.Address);
+                this.excelManager.logOrder(productInfo);
+            }
+        }
+    }
+
+    async close() {
+        try {
+            if (this.context) {
+                await this.context.close();
+                this.context = null;
+            }
+        } catch (error) {
+            logger.error('Error closing browser:', error);
+        }
+    }
+
+    async run() {
+        try {            
+            // Get all accounts from Excel
+            const accounts = this.excelManager.readConfig();
+            
+            // Process each account
+            for (const account of accounts) {
+                try {
+                    await this.initialize();
+                    logger.info(`Processing account: ${account.Email}`);
+                    
+                    // Login with current account
+                    const loginSuccess = await this.authService.login(account.Email, account.Password);
+                    if (!loginSuccess) {
+                        logger.error(`Failed to login with account: ${account.Email}`);
+                        continue; // Skip to next account if login fails
+                    }
+
+                    // Process products for this account
+                    await this.monitorProducts(account, account.URL);
+                    
+                    await this.close();
+                    
+                } catch (error) {
+                    logger.error(`Error processing account ${account.Email}:`, error);
+                    await this.close(); // Make sure to close browser on error
+                    continue; // Continue with next account even if current one fails
+                }
+            }
+        } catch (error) {
+            logger.error('Bot execution failed:', error);
+            await this.close(); // Make sure to close browser on error
+            throw error;
+        }
     }
 }
 

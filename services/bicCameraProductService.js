@@ -25,9 +25,9 @@ class BicCameraProductService {
 
             // Extract product information
             const productInfo = {
-                name: $('.product-name').text().trim(),
-                brand: $('.product-brand').text().trim(),
-                price: $('.product-price').text().trim().replace('¥', '').replace(',', ''),
+                name: $('#PROD-CURRENT-NAME').text().trim(),
+                brand: $('.bcs_price').text().trim(),
+                price: $('.bcs_price').text().trim().replace('¥', '').replace(',', ''),
                 stockStatus: $('.stock-status').text().trim(),
                 rating: this.parseRating($('.rating').attr('class')),
                 reviewCount: this.parseReviewCount($('.review-count').text()),

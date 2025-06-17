@@ -3,7 +3,7 @@ const logger = require('../config/logger');
 class BicCameraAuthService {
     constructor(page) {
         this.page = page;
-        this.setupBrowserContext();
+        // this.setupBrowserContext();
     }
 
     async setupBrowserContext() {
@@ -20,7 +20,8 @@ class BicCameraAuthService {
                 'Sec-Fetch-Mode': 'navigate',
                 'Sec-Fetch-Site': 'none',
                 'Sec-Fetch-User': '?1',
-                'Cache-Control': 'max-age=0'
+                'Cache-Control': 'max-age=0',
+                'http2': 'false'
             });
 
             // Thêm các tham số để giả lập trình duyệt thật
@@ -45,8 +46,13 @@ class BicCameraAuthService {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
+            await this.page.context().clearCookies();
+            await this.page.evaluate(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+            });
 
-            logger.info('Main site loaded, now trying login page...');
+            // logger.info('Main site loaded, now trying login page...');
             await this.page.waitForTimeout(2000);
             
             // Navigate to login page
@@ -68,20 +74,20 @@ class BicCameraAuthService {
             await this.page.click('#TMP-BTN-1');
 
             // Check for CAPTCHA
-            const captchaElement = await this.page.$('#login_imagecheck');
-            if (captchaElement) {
-                logger.info('CAPTCHA found, solving...');
-                const captchaSolution = await this.solveCaptcha();
-                await this.page.fill('#login_imagecheck', captchaSolution);
-            }
+            // const captchaElement = await this.page.$('#login_imagecheck');
+            // if (captchaElement) {
+            //     logger.info('CAPTCHA found, solving...');
+            //     const captchaSolution = await this.solveCaptcha();
+            //     await this.page.fill('#login_imagecheck', captchaSolution);
+            // }
 
-            await this.page.click('#TMP-BTN-1');
+            // await this.page.click('#TMP-BTN-1');
             
             // Wait for navigation
             try {
                 await this.page.waitForNavigation({
                     waitUntil: 'domcontentloaded',
-                    timeout: 3000
+                    timeout: 120000
                 });
             } catch (error) {
                 logger.warn('Navigation timeout, but continuing...');

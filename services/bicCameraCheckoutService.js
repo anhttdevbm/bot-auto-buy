@@ -9,11 +9,13 @@ class BicCameraCheckoutService {
         try {
             logger.info('Attempting to add product to cart');
             
-            // Click add to cart button
-            await this.page.click('.add-to-cart-button');
-            
-            // Wait for cart confirmation
-            await this.page.waitForSelector('.cart-confirmation', { timeout: 5000 });
+            // Wait for and click "Proceed to Purchase" button
+            const element = await this.page.waitForSelector('text="カートに入れる"', { timeout: 30000 });
+            if (!element) {
+                logger.error('Add to cart button not found');
+                return false;
+            }
+            await this.page.click('text="カートに入れる"');
             
             logger.info('Product added to cart successfully');
             return true;
@@ -27,31 +29,14 @@ class BicCameraCheckoutService {
         try {
             logger.info('Starting checkout process');
 
-            // Click proceed to checkout
-            await this.page.click('.checkout-button');
-            await this.page.waitForNavigation({ waitUntil: 'networkidle' });
+            await this.page.waitForSelector('text="カートに進む"', { timeout: 30000 });
+            await this.page.click('text="カートに進む"');
 
-            // Fill shipping address
-            await this.fillShippingAddress(address);
+            await this.page.waitForSelector('text="注文画面に進む"', { timeout: 30000 });
+            await this.page.click('text="注文画面に進む"');
 
-            // Fill payment information
-            await this.fillPaymentInfo(paymentInfo);
 
-            // Confirm order
-            await this.page.click('.confirm-order-button');
-            await this.page.waitForNavigation({ waitUntil: 'networkidle' });
-
-            // Check for order confirmation
-            const isConfirmed = await this.page.evaluate(() => {
-                return document.querySelector('.order-confirmation') !== null;
-            });
-
-            if (isConfirmed) {
-                logger.info('Order placed successfully');
-                return true;
-            } else {
-                throw new Error('Order confirmation not found');
-            }
+            logger.info('Checkout completed');
         } catch (error) {
             logger.error('Checkout failed:', error);
             return false;

@@ -1,1 +1,8 @@
 /node_modules
+/dist
+/logs
+/.cache
+/.vscode
+/data
+combined.log
+error.log
