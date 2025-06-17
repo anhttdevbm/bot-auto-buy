@@ -10,18 +10,36 @@ class BicCameraCheckoutService {
             logger.info('Attempting to add product to cart');
             
             // Wait for and click "Proceed to Purchase" button
-            const element = await this.page.waitForSelector('text="カートに入れる"', { timeout: 30000 });
-            if (!element) {
-                logger.error('Add to cart button not found');
-                return false;
+            this.clickButtonAddToCart();
+       
+            try {
+                await this.page.waitForNavigation({
+                    waitUntil: 'domcontentloaded',
+                    timeout: 4000
+                });
+            } catch (error) {
+                logger.warn('Navigation timeout, but continuing...');
+                this.clickButtonAddToCart();
             }
-            await this.page.click('text="カートに入れる"');
             
             logger.info('Product added to cart successfully');
             return true;
         } catch (error) {
             logger.error('Failed to add product to cart:', error);
             return false;
+        }
+    }
+
+    async clickButtonAddToCart() {
+        try {
+            const button = await this.page.waitForSelector('text="カートに入れる"', { timeout: 30000 });
+            if (!button) {
+                logger.error('Add to cart button not found');
+                return false;
+            }
+            await button.click();
+        } catch (error) {
+            throw error;
         }
     }
 

@@ -67,6 +67,8 @@ class BicCameraAuthService {
             // Fill login form
             await this.page.fill('input[type="text"]:nth-of-type(1)', email);
             await this.page.waitForTimeout(1000);
+            await this.page.waitForSelector('text="次回からメールアドレスの入力を省略する"', { timeout: 30000 });
+            await this.page.click('text="次回からメールアドレスの入力を省略する"');
             await this.page.fill('input[type="password"]:nth-of-type(1)', password);
             await this.page.waitForTimeout(1000);
             

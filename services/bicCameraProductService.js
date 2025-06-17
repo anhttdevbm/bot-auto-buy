@@ -19,6 +19,7 @@ class BicCameraProductService {
                 timeout: 30000
             });
 
+            return true;
             // Get page content
             const content = await this.page.content();
             const $ = cheerio.load(content);
@@ -26,13 +27,13 @@ class BicCameraProductService {
             // Extract product information
             const productInfo = {
                 name: $('#PROD-CURRENT-NAME').text().trim(),
-                brand: $('.bcs_price').text().trim(),
-                price: $('.bcs_price').text().trim().replace('¥', '').replace(',', ''),
-                stockStatus: $('.stock-status').text().trim(),
-                rating: this.parseRating($('.rating').attr('class')),
-                reviewCount: this.parseReviewCount($('.review-count').text()),
-                sku,
-                url: apiUrl
+                // brand: $('.bcs_price').text().trim(),
+                price: $('strong[itemprop="price"]').text().trim(),
+                // stockStatus: $('.stock-status').text().trim(),
+                // rating: this.parseRating($('.rating').attr('class')),
+                // reviewCount: this.parseReviewCount($('.review-count').text()),
+                // sku,
+                // url: apiUrl
             };
 
             // Validate required fields
@@ -40,7 +41,7 @@ class BicCameraProductService {
                 throw new Error('Missing required product information');
             }
 
-            logger.info('Product info retrieved:', productInfo);
+            // logger.info('Product info retrieved:', productInfo);
             return productInfo;
         } catch (error) {
             logger.error('Failed to get product info:', error);
@@ -71,7 +72,7 @@ class BicCameraProductService {
                 throw new Error('Failed to get product info');
             }
 
-            logger.info('Product check completed:', productInfo);
+            // logger.info('Product check completed:', productInfo);
             return productInfo;
         } catch (error) {
             logger.error('Product check failed:', error);
