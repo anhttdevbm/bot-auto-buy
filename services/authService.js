@@ -16,14 +16,14 @@ class AuthService {
             });
             
             logger.info('Main site loaded, now trying login page...');
-            await this.page.waitForTimeout(2000);
+            await this.page.waitForTimeout(1000);
             
             // Then navigate to login page
             await this.page.goto('https://order.yodobashi.com/yc/login/index.html?returnUrl=https%3A%2F%2Fwww.yodobashi.com%2F', {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
-            await this.page.waitForTimeout(2000);
+            await this.page.waitForTimeout(1000);
             
             logger.info('Login page loaded, checking for elements...');
             
