@@ -12,6 +12,7 @@ class BicCameraProductService {
             
             // Construct API URL
             const apiUrl = `https://www.biccamera.com/bc/item/${sku}/`;
+            await this.page.waitForTimeout(1000);
             
             // Navigate to product page
             await this.page.goto(apiUrl, {

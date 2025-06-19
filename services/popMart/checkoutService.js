@@ -39,11 +39,15 @@ class CheckoutService {
 
             await this.page.waitForTimeout(7000); // Wait for page to load
             // Wait for and click "Login" button if not logged in
-            const cancelPayBtn = await this.page.waitForSelector('text="CANCEL PAYMENT"', { timeout: 5000 });
-            if (cancelPayBtn) {
-                await cancelPayBtn.click(); // Click the button with a timeout
-                logger.info('Cancelled payment, returning to cart');
-                return false; // Exit checkout if cancelled
+            try {
+                const cancelPayBtn = await this.page.waitForSelector('text="CANCEL PAYMENT"', { timeout: 3000 });
+                if (cancelPayBtn) {
+                    await cancelPayBtn.click(); // Click the button with a timeout
+                    logger.info('Cancelled payment, returning to cart');
+                    return false; // Exit checkout if cancelled
+                }
+            } catch (error) {
+                logger.info('No cancel payment button found, continuing checkout');
             }
             // Wait for and click "Next" button
             const payBtn = await this.page.waitForSelector('text="PROCEED TO PAY"', { timeout: 15000 });
