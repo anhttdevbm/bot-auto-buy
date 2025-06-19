@@ -4,9 +4,9 @@ const os = require('os');
 const { chromium } = require('playwright');
 const logger = require('./config/logger');
 const BaseBot = require('./services/baseBot');
-const BicCameraAuthService = require('./services/bicCameraAuthService');
-const BicCameraProductService = require('./services/bicCameraProductService');
-const BicCameraCheckoutService = require('./services/bicCameraCheckoutService');
+const BicCameraAuthService = require('./services/bicCamera/bicCameraAuthService');
+const BicCameraProductService = require('./services/bicCamera/bicCameraProductService');
+const BicCameraCheckoutService = require('./services/bicCamera/bicCameraCheckoutService');
 const SessionManager = require('./utils/sessionManager');
 const ExcelManager = require('./utils/excelManager');
 

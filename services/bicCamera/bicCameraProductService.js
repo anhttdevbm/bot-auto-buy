@@ -1,4 +1,4 @@
-const logger = require('../config/logger');
+const logger = require('../../config/logger');
 const cheerio = require('cheerio');
 
 class BicCameraProductService {

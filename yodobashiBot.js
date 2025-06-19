@@ -1,9 +1,9 @@
 const { program } = require('commander');
 const logger = require('./config/logger');
 const BaseBot = require('./services/baseBot');
-const AuthService = require('./services/authService');
-const ProductService = require('./services/productService');
-const CheckoutService = require('./services/checkoutService');
+const AuthService = require('./services/yodobashiBot/authService');
+const ProductService = require('./services/yodobashiBot/productService');
+const CheckoutService = require('./services/yodobashiBot/checkoutService');
 
 class YodobashiBot extends BaseBot {
     constructor(config) {

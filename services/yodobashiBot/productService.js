@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const logger = require('../config/logger');
+const logger = require('../../config/logger');
 
 class ProductService {
     constructor(page) {

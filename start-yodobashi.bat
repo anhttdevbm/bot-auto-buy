@@ -10,10 +10,10 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Check if config.xlsx exists
-if not exist "config.xlsx" (
-    echo Error: config.xlsx not found!
-    echo Please create config.xlsx with required configuration.
+:: Check if yodobashi.xlsx exists
+if not exist "yodobashi.xlsx" (
+    echo Error: yodobashi.xlsx not found!
+    echo Please create yodobashi.xlsx with required configuration.
     pause
     exit /b 1
 )
@@ -46,7 +46,7 @@ if not exist "data" mkdir data
 
 :: Run the bot
 echo Running bot...
-node bot.js --excel config.xlsx
+node yodobashiBot.js --excel yodobashi.xlsx
 
 :: If bot exits with error
 if %errorlevel% neq 0 (
