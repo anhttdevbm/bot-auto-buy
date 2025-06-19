@@ -11,14 +11,14 @@ Bot tự động mua hàng trên Yodobashi.com và BicCamera.com
 
 2. Tải project về máy và giải nén
 
-3. Double-click vào file `start-bot.bat` (yodobashi), `start-biccamera.bat` (BicCamera.com)
+3. Double-click vào file `start-yodobashi.bat` (yodobashi), `start-biccamera.bat` (BicCamera.com), `start-popMart.bat` (popmart.com), 
    - Bot sẽ tự động cài đặt các thư viện cần thiết
    - Tạo các thư mục cần thiết
    - Chạy bot
 
 ## Cấu hình
 
-1. Tạo file `config.xlsx` với các cột:
+1. Tạo file `yodobashi.xlsx` với các cột:
    - Email: Email đăng nhập
    - Password: Mật khẩu đăng nhập
    - Card: Thông tin thẻ thanh toán
@@ -26,8 +26,9 @@ Bot tự động mua hàng trên Yodobashi.com và BicCamera.com
    - URL: Link sản phẩm cần mua
 
 2. Chọn bot muốn chạy:
-   - Yodobashi: `node bot.js --excel config.xlsx`
+   - Yodobashi: `node yodobashiBot.js --excel yodobashi.xlsx`
    - BicCamera: `node bicCameraBot.js --excel biccamera.xlsx`
+   - PopMart: `node popMartBot.js --excel popMart.xlsx`
 
 ## Lưu ý quan trọng
 
@@ -60,10 +61,13 @@ npx playwright install chromium
 3. Chạy trong chế độ development:
 ```bash
 # Cho Yodobashi
-node bot.js --excel config.xlsx
+node yodobashiBot.js --excel yodobashi.xlsx
 
 # Cho BicCamera
-node bicCameraBot.js --excel config.xlsx
+node bicCameraBot.js --excel biccamera.xlsx
+
+# Cho PopMart
+node popMartBot.js --excel popMart.xlsx
 ```
 
 4. Cấu trúc project:
@@ -80,9 +84,9 @@ auto-buy-bot/
 │   └── excelManager.js    # Xử lý file Excel
 ├── .env                   # Cấu hình môi trường
 ├── package.json          # Dependencies
-├── bot.js               # Bot Yodobashi
+├── yodobashiBot.js               # Bot Yodobashi
 ├── bicCameraBot.js      # Bot BicCamera
-└── config.xlsx          # Cấu hình bot
+└── yodobashi.xlsx          # Cấu hình yodobashi
 ```
 
 5. Debug:
@@ -104,7 +108,7 @@ auto-buy-bot/
 - Ghi log chi tiết vào Excel
 - Mã hóa dữ liệu nhạy cảm
 - Xử lý lỗi thông minh
-- Hỗ trợ nhiều website (Yodobashi, BicCamera)
+- Hỗ trợ nhiều website (Yodobashi, BicCamera, popmart)
 
 ## Xử lý lỗi
 
