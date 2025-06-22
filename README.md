@@ -1,6 +1,6 @@
 # Auto Buy Bot
 
-Bot tự động mua hàng trên Yodobashi.com và BicCamera.com
+Bot tự động mua hàng trên Yodobashi.com, BicCamera.com, PopMart.com và Rakuten.co.jp
 
 ## Cài đặt nhanh
 
@@ -11,24 +11,31 @@ Bot tự động mua hàng trên Yodobashi.com và BicCamera.com
 
 2. Tải project về máy và giải nén
 
-3. Double-click vào file `start-yodobashi.bat` (yodobashi), `start-biccamera.bat` (BicCamera.com), `start-popMart.bat` (popmart.com), 
+3. Double-click vào file `start-yodobashi.bat` (yodobashi), `start-biccamera.bat` (BicCamera.com), `start-popMart.bat` (popmart.com), `start-rakuten.bat` (rakuten.co.jp)
    - Bot sẽ tự động cài đặt các thư viện cần thiết
    - Tạo các thư mục cần thiết
    - Chạy bot
 
 ## Cấu hình
 
-1. Tạo file `yodobashi.xlsx` với các cột:
+1. Tạo file Excel tương ứng với từng website:
+   - `yodobashi.xlsx` cho Yodobashi
+   - `biccamera.xlsx` cho BicCamera
+   - `popMart.xlsx` cho PopMart
+   - `rakuten.xlsx` cho Rakuten
+
+2. Mỗi file Excel cần có các cột:
    - Email: Email đăng nhập
    - Password: Mật khẩu đăng nhập
    - Card: Thông tin thẻ thanh toán
    - Address: Địa chỉ giao hàng
    - URL: Link sản phẩm cần mua
 
-2. Chọn bot muốn chạy:
+3. Chọn bot muốn chạy:
    - Yodobashi: `node yodobashiBot.js --excel yodobashi.xlsx`
    - BicCamera: `node bicCameraBot.js --excel biccamera.xlsx`
    - PopMart: `node popMartBot.js --excel popMart.xlsx`
+   - Rakuten: `node rakutenBot.js --excel rakuten.xlsx`
 
 ## Lưu ý quan trọng
 
@@ -68,6 +75,9 @@ node bicCameraBot.js --excel biccamera.xlsx
 
 # Cho PopMart
 node popMartBot.js --excel popMart.xlsx
+
+# Cho Rakuten
+node rakutenBot.js --excel rakuten.xlsx
 ```
 
 4. Cấu trúc project:
@@ -76,17 +86,24 @@ auto-buy-bot/
 ├── config/
 │   └── logger.js          # Cấu hình logging
 ├── services/
-│   ├── authService.js     # Xử lý đăng nhập
-│   ├── productService.js  # Xử lý thông tin sản phẩm
-│   └── checkoutService.js # Xử lý thanh toán
+│   ├── baseBot.js         # Base bot class
+│   ├── yodobashiBot/      # Services cho Yodobashi
+│   ├── bicCamera/         # Services cho BicCamera
+│   ├── popMart/           # Services cho PopMart
+│   └── rakuten/           # Services cho Rakuten
 ├── utils/
 │   ├── sessionManager.js  # Quản lý session
 │   └── excelManager.js    # Xử lý file Excel
 ├── .env                   # Cấu hình môi trường
 ├── package.json          # Dependencies
-├── yodobashiBot.js               # Bot Yodobashi
-├── bicCameraBot.js      # Bot BicCamera
-└── yodobashi.xlsx          # Cấu hình yodobashi
+├── yodobashiBot.js       # Bot Yodobashi
+├── bicCameraBot.js       # Bot BicCamera
+├── popMartBot.js         # Bot PopMart
+├── rakutenBot.js         # Bot Rakuten
+├── yodobashi.xlsx        # Cấu hình Yodobashi
+├── biccamera.xlsx        # Cấu hình BicCamera
+├── popMart.xlsx          # Cấu hình PopMart
+└── rakuten.xlsx          # Cấu hình Rakuten
 ```
 
 5. Debug:
@@ -108,7 +125,7 @@ auto-buy-bot/
 - Ghi log chi tiết vào Excel
 - Mã hóa dữ liệu nhạy cảm
 - Xử lý lỗi thông minh
-- Hỗ trợ nhiều website (Yodobashi, BicCamera, popmart)
+- Hỗ trợ nhiều website (Yodobashi, BicCamera, PopMart, Rakuten)
 
 ## Xử lý lỗi
 

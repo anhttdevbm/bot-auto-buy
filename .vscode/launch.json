@@ -8,8 +8,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/popMartBot.js",
-            "args": ["--excel", "popMart.xlsx"],
+            "program": "${workspaceFolder}/rakutenBot.js",
+            "args": ["--excel", "rakuten.xlsx"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }

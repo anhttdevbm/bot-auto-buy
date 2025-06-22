@@ -373,3 +373,47 @@
 {"level":"info","message":"Product added to cart","timestamp":"2025-06-17T04:09:33.202Z"}
 {"level":"info","message":"Checkout completed","timestamp":"2025-06-17T04:09:45.864Z"}
 {"level":"info","message":"Order logged successfully","timestamp":"2025-06-17T04:09:45.870Z"}
+{"level":"info","message":"Processing account: basikle2005@gmail.com","timestamp":"2025-06-22T17:24:38.952Z"}
+{"level":"info","message":"Logging in with email:","timestamp":"2025-06-22T17:24:38.954Z"}
+{"level":"error","message":"Login error: page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://www.yodobashi.com/\", waiting until \"domcontentloaded\"\u001b[22m\n","stack":"page.goto: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - navigating to \"https://www.yodobashi.com/\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at AuthService.login (E:\\Documents\\Freelance\\bot-auto-buy\\services\\yodobashiBot\\authService.js:13:29)\n    at YodobashiBot.run (E:\\Documents\\Freelance\\bot-auto-buy\\services\\baseBot.js:120:65)\n    at async main (E:\\Documents\\Freelance\\bot-auto-buy\\yodobashiBot.js:47:9)","timestamp":"2025-06-22T17:24:40.668Z"}
+{"level":"error","message":"Failed to login with account: basikle2005@gmail.com","timestamp":"2025-06-22T17:24:40.669Z"}
+{"level":"info","message":"Processing account: sangthanh19980502@gmail.com","timestamp":"2025-06-22T17:25:26.823Z"}
+{"level":"info","message":"Logging in to Rakuten with email:","timestamp":"2025-06-22T17:25:26.825Z"}
+{"level":"info","message":"Rakuten main page loaded, looking for login button...","timestamp":"2025-06-22T17:25:30.369Z"}
+{"level":"info","message":"Login form submitted, waiting for navigation...","timestamp":"2025-06-22T17:25:33.480Z"}
+{"level":"info","message":"Navigation completed after login","timestamp":"2025-06-22T17:25:33.715Z"}
+{"level":"info","message":"Login successful","timestamp":"2025-06-22T17:25:34.732Z"}
+{"level":"info","message":"Checking product at URL: https://item.rakuten.co.jp/drink-market/f16-760/","timestamp":"2025-06-22T17:25:34.732Z"}
+{"level":"info","message":"Found product name with selector: .normal_reserve_item_name","timestamp":"2025-06-22T17:25:39.122Z"}
+{"level":"info","message":"Found product price with selector: .value--1oSD_","timestamp":"2025-06-22T17:25:39.130Z"}
+{"level":"info","message":"Found add to cart button with selector: text=\"かごに追加\"","timestamp":"2025-06-22T17:25:39.149Z"}
+{"availability":"In Stock","isAvailable":true,"level":"info","message":"Product info:","name":"コカコーラ い・ろ・は・す(いろはす I LOHAS) 2Lペットボトル×6本入 メーカー直送｜全国送料無料 いろはす ミネラルウォーター 2l 水 コーラ","price":"1,698","timestamp":"2025-06-22T17:25:39.149Z"}
+{"level":"info","message":"Product is available: コカコーラ い・ろ・は・す(いろはす I LOHAS) 2Lペットボトル×6本入 メーカー直送｜全国送料無料 いろはす ミネラルウォーター 2l 水 コーラ","timestamp":"2025-06-22T17:25:39.149Z"}
+{"level":"info","message":"Attempting to add product to cart...","timestamp":"2025-06-22T17:25:39.149Z"}
+{"level":"info","message":"Found 2nd add to cart button with selector: text=\"購入手続きへ\"","timestamp":"2025-06-22T17:25:39.168Z"}
+{"level":"info","message":"Add to cart button clicked","timestamp":"2025-06-22T17:25:40.698Z"}
+{"level":"info","message":"Product added to cart successfully","timestamp":"2025-06-22T17:25:41.707Z"}
+{"level":"info","message":"Starting checkout process...","timestamp":"2025-06-22T17:25:41.707Z"}
+{"level":"info","message":"Found checkout button with selector: input[value*=\"ご購入手続き\"]","timestamp":"2025-06-22T17:25:42.879Z"}
+{"level":"info","message":"Checkout button clicked","timestamp":"2025-06-22T17:25:43.310Z"}
+{"level":"info","message":"Found confirm order button with selector: input[value*=\"注文を確定する\"]","timestamp":"2025-06-22T17:25:53.083Z"}
+{"level":"info","message":"Order confirmed","timestamp":"2025-06-22T17:25:53.897Z"}
+{"level":"info","message":"Checkout completed successfully","timestamp":"2025-06-22T17:25:53.897Z"}
+{"level":"info","message":"Order logged successfully","timestamp":"2025-06-22T17:25:53.909Z"}
+{"level":"info","message":"Checking product at URL: https://item.rakuten.co.jp/drink-market/s15-25/","timestamp":"2025-06-22T17:25:53.909Z"}
+{"level":"info","message":"Found product name with selector: .normal_reserve_item_name","timestamp":"2025-06-22T17:25:57.336Z"}
+{"level":"info","message":"Found product price with selector: .value--1oSD_","timestamp":"2025-06-22T17:25:57.364Z"}
+{"level":"info","message":"Found add to cart button with selector: text=\"かごに追加\"","timestamp":"2025-06-22T17:25:57.393Z"}
+{"availability":"In Stock","isAvailable":true,"level":"info","message":"Product info:","name":"コカコーラ コカコーラ社製品 選べる2ケースセット 500mlペットボトル×48(24×2)本入(一部、410ml～560mlPETを含む) メーカー直送｜全国送料無料 いろはす コーラゼロ アクエリアス ファンタ 爽健美茶","price":"4,608","timestamp":"2025-06-22T17:25:57.394Z"}
+{"level":"info","message":"Product is available: コカコーラ コカコーラ社製品 選べる2ケースセット 500mlペットボトル×48(24×2)本入(一部、410ml～560mlPETを含む) メーカー直送｜全国送料無料 いろはす コーラゼロ アクエリアス ファンタ 爽健美茶","timestamp":"2025-06-22T17:25:57.394Z"}
+{"level":"info","message":"Attempting to add product to cart...","timestamp":"2025-06-22T17:25:57.394Z"}
+{"level":"info","message":"Found 2nd add to cart button with selector: text=\"購入手続きへ\"","timestamp":"2025-06-22T17:25:57.425Z"}
+{"level":"info","message":"Add to cart button clicked","timestamp":"2025-06-22T17:25:58.440Z"}
+{"level":"info","message":"Product added to cart successfully","timestamp":"2025-06-22T17:25:59.441Z"}
+{"level":"info","message":"Starting checkout process...","timestamp":"2025-06-22T17:25:59.441Z"}
+{"level":"info","message":"Found checkout button with selector: input[value*=\"ご購入手続き\"]","timestamp":"2025-06-22T17:26:00.467Z"}
+{"level":"info","message":"Checkout button clicked","timestamp":"2025-06-22T17:26:00.896Z"}
+{"level":"info","message":"Found confirm order button with selector: input[value*=\"注文を確定する\"]","timestamp":"2025-06-22T17:26:09.161Z"}
+{"level":"info","message":"Order confirmed","timestamp":"2025-06-22T17:26:09.998Z"}
+{"level":"info","message":"Checkout completed successfully","timestamp":"2025-06-22T17:26:09.998Z"}
+{"level":"info","message":"Order logged successfully","timestamp":"2025-06-22T17:26:10.005Z"}
