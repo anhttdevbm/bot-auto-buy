@@ -1,4 +1,5 @@
 const logger = require('../../config/logger');
+const { createCanvas, loadImage } = require('canvas');
 
 class BicCameraAuthService {
     constructor(page) {
@@ -42,18 +43,18 @@ class BicCameraAuthService {
             logger.info('Logging in to BicCamera...', email);
 
             // First try to access the main site
-            await this.page.goto('https://www.biccamera.com/bc/main/', {
-                waitUntil: 'domcontentloaded',
-                timeout: 30000
-            });
-            await this.page.context().clearCookies();
-            await this.page.evaluate(() => {
-                localStorage.clear();
-                sessionStorage.clear();
-            });
+            // await this.page.goto('https://www.biccamera.com/bc/main/', {
+            //     waitUntil: 'domcontentloaded',
+            //     timeout: 30000
+            // });
+            // await this.page.context().clearCookies();
+            // await this.page.evaluate(() => {
+            //     localStorage.clear();
+            //     sessionStorage.clear();
+            // });
 
-            // logger.info('Main site loaded, now trying login page...');
-            await this.page.waitForTimeout(2000);
+            // // logger.info('Main site loaded, now trying login page...');
+            // await this.page.waitForTimeout(2000);
             
             // Navigate to login page
             await this.page.goto('https://www.biccamera.com/bc/member/CSfLogin.jsp', {
@@ -84,7 +85,55 @@ class BicCameraAuthService {
             // }
 
             // await this.page.click('#TMP-BTN-1');
+            // Lấy phần tử <img>
+            // Lấy src của ảnh
+            const imageIds = [
+                'login_img_btn00',
+                'login_img_btn01',
+                'login_img_btn02',
+                'login_img_btn03',
+                'login_img_btn04'
+            ];
             
+            for (const id of imageIds) {
+                const imgElement = await this.page.$(`#${id}`);
+                if (!imgElement) {
+                    logger.warn(`Image element with id ${id} not found`);
+                    continue;
+                }
+            
+                const imgSrc = await this.page.$eval(`#${id}`, img => img.src);
+            
+                const color = await this.page.evaluate(async (src) => {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.crossOrigin = 'Anonymous';
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            const x = Math.floor(img.width / 2);
+                            const y = Math.floor(img.height / 2);
+                            const data = ctx.getImageData(x, y, 1, 1).data;
+                            resolve({ r: data[0], g: data[1], b: data[2], a: data[3] });
+                        };
+                        img.onerror = reject;
+                        img.src = src;
+                    });
+                }, imgSrc);
+            
+                console.log('Màu pixel trung tâm:', color);
+                await this.page.waitForTimeout(500);
+                if (color.r != 150) {
+                    await this.page.click(`#${id}`);
+                    // If clicking causes navigation, break out of the loop
+                    // break;
+                }
+            }
+            
+            await this.page.click('#TMP-BTN-1');
             // Wait for navigation
             try {
                 await this.page.waitForNavigation({
