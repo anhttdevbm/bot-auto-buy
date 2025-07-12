@@ -94,7 +94,7 @@ class BicCameraAuthService {
                 'login_img_btn03',
                 'login_img_btn04'
             ];
-            
+            await this.page.waitForSelector('#login_img_btn00', { timeout: 5000 });
             for (const id of imageIds) {
                 const imgElement = await this.page.$(`#${id}`);
                 if (!imgElement) {
