@@ -96,14 +96,14 @@ class BicCameraAuthService {
             ];
 
             // Wait for navigation
-            try {
-                await this.page.waitForNavigation({
-                    waitUntil: 'domcontentloaded',
-                    timeout: 5000
-                });
-            } catch (error) {
-                logger.warn('Navigation timeout, but continuing...');
-            }
+            // try {
+            //     await this.page.waitForNavigation({
+            //         waitUntil: 'domcontentloaded',
+            //         timeout: 5000
+            //     });
+            // } catch (error) {
+            //     logger.warn('Navigation timeout, but continuing...');
+            // }
             
             // Check if CAPTCHA images exist before processing
             try {
@@ -153,14 +153,14 @@ class BicCameraAuthService {
             }
             
             // Wait for navigation
-            try {
-                await this.page.waitForNavigation({
-                    waitUntil: 'domcontentloaded',
-                    timeout: 120000
-                });
-            } catch (error) {
-                logger.warn('Navigation timeout, but continuing...');
-            }
+            // try {
+            //     await this.page.waitForNavigation({
+            //         waitUntil: 'domcontentloaded',
+            //         timeout: 120000
+            //     });
+            // } catch (error) {
+            //     logger.warn('Navigation timeout, but continuing...');
+            // }
 
             // Check if login was successful
             const isLoggedIn = await this.checkLoginStatus();
