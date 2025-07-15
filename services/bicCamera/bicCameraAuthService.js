@@ -43,18 +43,18 @@ class BicCameraAuthService {
             logger.info('Logging in to BicCamera...', email);
 
             // First try to access the main site
-            // await this.page.goto('https://www.biccamera.com/bc/main/', {
-            //     waitUntil: 'domcontentloaded',
-            //     timeout: 30000
-            // });
-            // await this.page.context().clearCookies();
-            // await this.page.evaluate(() => {
-            //     localStorage.clear();
-            //     sessionStorage.clear();
-            // });
+            await this.page.goto('https://www.biccamera.com/bc/main/', {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+            });
+            await this.page.context().clearCookies();
+            await this.page.evaluate(() => {
+                localStorage.clear();
+                sessionStorage.clear();
+            });
 
-            // // logger.info('Main site loaded, now trying login page...');
-            // await this.page.waitForTimeout(2000);
+            // logger.info('Main site loaded, now trying login page...');
+            await this.page.waitForTimeout(2000);
             
             // Navigate to login page
             await this.page.goto('https://www.biccamera.com/bc/member/CSfLogin.jsp', {

@@ -20,43 +20,45 @@ class BicCameraBot {
 
     async initialize() {
         try {
-            // Get Chrome user data directory based on OS
-            const userDataDir = path.join(os.homedir(), 'AppData', 'Local', 'Google', 'Chrome', 'User Data', 'Profile 1');
+            // // Get Chrome user data directory based on OS
+            // const userDataDir = path.join(os.homedir(), 'AppData', 'Local', 'Google', 'Chrome', 'User Data', 'Profile 1');
             
-            // Launch browser with persistent context
-            this.context = await chromium.launchPersistentContext(userDataDir, {
-                headless: false,
-                // channel: 'chrome',
-                args: [
-                    '--disable-web-security',
-                    '--disable-features=IsolateOrigins,site-per-process',
-                    '--disable-site-isolation-trials',
-                    '--disable-setuid-sandbox',
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-accelerated-2d-canvas',
-                    '--no-first-run',
-                    '--no-zygote',
-                    '--disable-gpu',
-                    '--disable-blink-features=AutomationControlled'
-                ],
-                viewport: { width: 1920, height: 1080 },
-                locale: 'ja-JP',
-                timezoneId: 'Asia/Tokyo',
-                geolocation: { longitude: 139.7670, latitude: 35.6814 },
-                permissions: ['geolocation'],
-                ignoreHTTPSErrors: true,
-                bypassCSP: true,
-                hasTouch: true,
-                isMobile: false,
-                deviceScaleFactor: 1,
-                colorScheme: 'light',
-                reducedMotion: 'no-preference',
-                forcedColors: 'none'
-            });
-
+            // // Launch browser with persistent context
+            // this.context = await chromium.launchPersistentContext(userDataDir, {
+            //     headless: false,
+            //     // channel: 'chrome',
+            //     args: [
+            //         '--disable-web-security',
+            //         '--disable-features=IsolateOrigins,site-per-process',
+            //         '--disable-site-isolation-trials',
+            //         '--disable-setuid-sandbox',
+            //         '--no-sandbox',
+            //         '--disable-dev-shm-usage',
+            //         '--disable-accelerated-2d-canvas',
+            //         '--no-first-run',
+            //         '--no-zygote',
+            //         '--disable-gpu',
+            //         '--disable-blink-features=AutomationControlled'
+            //     ],
+            //     viewport: { width: 1920, height: 1080 },
+            //     locale: 'ja-JP',
+            //     timezoneId: 'Asia/Tokyo',
+            //     geolocation: { longitude: 139.7670, latitude: 35.6814 },
+            //     permissions: ['geolocation'],
+            //     ignoreHTTPSErrors: true,
+            //     bypassCSP: true,
+            //     hasTouch: true,
+            //     isMobile: false,
+            //     deviceScaleFactor: 1,
+            //     colorScheme: 'light',
+            //     reducedMotion: 'no-preference',
+            //     forcedColors: 'none'
+            // });
+            // Kết nối tới Chrome thật đã mở sẵn với remote debugging
+            const browser = await chromium.connectOverCDP('http://localhost:9222');
+            this.context = browser.contexts()[0] || await browser.newContext();
             this.page = await this.context.newPage();
-            await this.setupPage();
+            // await this.setupPage();
 
             this.authService = new BicCameraAuthService(this.page);
             this.productService = new BicCameraProductService(this.page);
@@ -88,7 +90,7 @@ class BicCameraBot {
         await this.page.setExtraHTTPHeaders({
             'Accept-Language': 'ja-JP,ja;q=0.9',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Encoding': 'gzip, deflate',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
             'Sec-Fetch-Dest': 'document',
