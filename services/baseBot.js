@@ -129,7 +129,8 @@ class BaseBot {
                     // Logout before switching to next account
                     // await this.authService.logout();
 
-                    await this.close();
+                    // await this.close();
+                    process.exit(0);
                     
                 } catch (error) {
                     logger.error(`Error processing account ${account.Email}:`, error);

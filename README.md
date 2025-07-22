@@ -173,3 +173,16 @@ Nếu cần hỗ trợ thêm, vui lòng:
 3. Kiểm tra file error.log
 4. Chụp ảnh màn hình lỗi
 5. Liên hệ hỗ trợ với thông tin chi tiết 
+
+## Run the Dashboard (Python GUI)
+
+1. Make sure you have Python 3.x installed (if not using the .exe version).
+2. Install required libraries:
+   ```bash
+   pip install pandas openpyxl
+   ```
+3. Run the dashboard:
+   ```bash
+   python dashboard.py
+   ```
+   (Or double-click `dashboard.exe` if you have the packaged version) 
