@@ -14,7 +14,7 @@ class BaseBot {
 
     async initialize() {
         this.browser = await chromium.launch({
-            headless: false,
+            headless: true,
             channel: 'chrome',
             args: [
                 '--disable-web-security',
