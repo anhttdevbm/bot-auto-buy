@@ -4,6 +4,7 @@ const BaseBot = require('./services/baseBot');
 const AuthService = require('./services/popMart/authService');
 const ProductService = require('./services/popMart/productService');
 const CheckoutService = require('./services/popMart/checkoutService');
+const { chromium } = require('playwright');
 
 class PopMartBot extends BaseBot {
     constructor(config) {
@@ -11,7 +12,10 @@ class PopMartBot extends BaseBot {
     }
 
     async initialize() {
-        await super.initialize();
+        // await super.initialize();
+        const browser = await chromium.connectOverCDP('http://localhost:9222');
+        this.context = browser.contexts()[0] || await browser.newContext();
+        this.page = await this.context.newPage();
         
         // Initialize Yodobashi-specific services
         this.authService = new AuthService(this.page);

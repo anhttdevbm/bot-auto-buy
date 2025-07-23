@@ -28,7 +28,7 @@ class ExcelManager {
         }
     }
 
-    logOrder(productInfo) {
+    logOrder(productInfo, status = 'Purchased') {
         try {
             let workbook;
             let sheet;
@@ -51,7 +51,7 @@ class ExcelManager {
                 new Date().toISOString(),
                 productInfo.name,
                 productInfo.price,
-                'Purchased'
+                status
             ];
             XLSX.utils.sheet_add_aoa(sheet, [newRow], { origin: -1 });
 

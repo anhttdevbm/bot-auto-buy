@@ -10,35 +10,65 @@ class AuthService {
             logger.info('Logging in with email:', email);
             
             // First try to access the main site
-            await this.page.goto('https://www.popmart.com/jp', {
+            await this.page.goto('https://www.popmart.com/vn', {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
 
             // clickButtonFunc(this.page, "Japan");
-            const btnClick = await this.page.waitForSelector(`text="Japan"`, { timeout: 10000 });
-            if (btnClick) {
-                await btnClick.click();
+            try {
+                const btnClick = await this.page.waitForSelector(`text="Vietnam"`, { timeout: 2000 });
+                if (btnClick) {
+                    await btnClick.click();
+                }
+            } catch (error) {
+                logger.info('"Vietnam" button not found, continuing...');
             }
-            
+
             logger.info('Main site loaded, now trying login page...');
             await this.page.waitForTimeout(1000);
             
             // Then navigate to login page
-            await this.page.goto('https://www.popmart.com/jp/user/login', {
+            await this.page.goto('https://www.popmart.com/vn/user/login', {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
-            await this.page.waitForTimeout(1000);
-            await this.page.click('text="ACCEPT"');
+            await this.page.waitForTimeout(3000);
+            try {
+                const acceptBtn = await this.page.$('text="ACCEPT"', { timeout: 2000 });
+                if (acceptBtn) {
+                    await acceptBtn.click();
+                    logger.info('"ACCEPT" button clicked');
+                } else {
+                    logger.info('"ACCEPT" button not found, continuing...');
+                }
+            } catch (error) {
+                logger.info('"ACCEPT" button not found, continuing...');
+            }
             
             logger.info('Login page loaded, checking for elements...');
             
             // Wait for login form to be visible
-            await this.page.waitForSelector(`text="SIGN IN OR REGISTER"`);
-            logger.info('Login form found');
+            try {
+                const isLogin = await this.page.waitForSelector(`text="SIGN IN OR REGISTER"`, { timeout: 3000 });
+                logger.info('Login form found');
+            } catch (error) {
+                logger.info('"SIGN IN OR REGISTER" button not found, continuing...');
+                return true;
+            }
 
             await this.page.fill('#email', email);
+            try {
+                const isChecked = await this.page.isChecked('.ant-checkbox-input');
+                if (!isChecked) {
+                    await this.page.click('.ant-checkbox-input', { timeout: 3000 });
+                    logger.info('Checkbox was not checked, now clicked to check.');
+                } else {
+                    logger.info('Checkbox was already checked.');
+                }
+            } catch (error) {
+                logger.info('button not found, continuing...');
+            }
             const btnContinue = await this.page.waitForSelector(`text="CONTINUE"`);
             if (btnContinue) {
                 await btnContinue.click();
