@@ -29,13 +29,14 @@ class RakutenBot extends BaseBot {
                 logger.info(`Product is available: ${productInfo.name}`);
                 const addedToCart = await this.checkoutService.addToCart();
                 if (addedToCart) {
-                    await this.checkoutService.checkout(account.Card, account.Address, account.Password, account.YYYYMMDD);
                     this.excelManager.logOrder(productInfo);
                 }
             } else {
                 logger.info(`Product not available or check failed for URL: ${url}`);
             }
         }
+
+        await this.checkoutService.checkout(account.Card, account.Address, account.Password, account.YYYYMMDD);
     }
 }
 

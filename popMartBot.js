@@ -5,6 +5,7 @@ const AuthService = require('./services/popMart/authService');
 const ProductService = require('./services/popMart/productService');
 const CheckoutService = require('./services/popMart/checkoutService');
 const { chromium } = require('playwright');
+const ProxyManager = require('./config/proxyManager');
 
 class PopMartBot extends BaseBot {
     constructor(config) {
@@ -14,7 +15,14 @@ class PopMartBot extends BaseBot {
     async initialize() {
         // await super.initialize();
         const browser = await chromium.connectOverCDP('http://localhost:9222');
+
+        const proxyManager = new ProxyManager();
+        const proxyServer = proxyManager.getRandomProxy();
+
         this.context = browser.contexts()[0] || await browser.newContext();
+        // this.context = await browser.newContext({
+        //     proxy: !proxyServer || undefined
+        // });
         this.page = await this.context.newPage();
         
         // Initialize Yodobashi-specific services

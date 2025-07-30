@@ -2,8 +2,11 @@ const cheerio = require('cheerio');
 const logger = require('../../config/logger');
 
 class ProductService {
+    originalPage = null;
+
     constructor(page) {
         this.page = page;
+        this.originalPage = page;
     }
 
     async getProductInfo(sku) {
@@ -11,7 +14,7 @@ class ProductService {
             logger.info('Fetching product info for SKU:', sku);
             
             const apiUrl = `https://www.yodobashi.com/ws/api/ec/lego/product?sku=${sku}`;
-            const response = await this.page.evaluate(async (url) => {
+            const response = await this.originalPage.evaluate(async (url) => {
                 const res = await fetch(url, {
                     method: 'GET',
                     headers: {
@@ -87,20 +90,21 @@ class ProductService {
         }
     }
 
-    async checkProduct(url) {
+    async checkProduct(url, page) {
         try {
+            this.page = page;
             const sku = url.split('/').pop().replace('/', '');
             logger.info('Checking product with SKU:', sku);
-
-            const productInfo = await this.getProductInfo(sku);
-            if (!productInfo) {
-                throw new Error('Failed to get product info from API');
-            }
 
             await this.page.goto(url, {
                 waitUntil: 'domcontentloaded',
                 timeout: 30000
             });
+
+            const productInfo = await this.getProductInfo(sku);
+            if (!productInfo) {
+                throw new Error('Failed to get product info from API');
+            }
 
             logger.info('Product info:', productInfo);
             return productInfo;

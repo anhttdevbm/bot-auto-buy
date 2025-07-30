@@ -3,6 +3,7 @@ const { program } = require('commander');
 const logger = require('../config/logger');
 const SessionManager = require('../utils/sessionManager');
 const ExcelManager = require('../utils/excelManager');
+const ProxyManager = require('../config/proxyManager');
 require('dotenv').config();
 
 class BaseBot {
@@ -13,6 +14,9 @@ class BaseBot {
     }
 
     async initialize() {
+        const proxyManager = new ProxyManager();
+        const proxyServer = proxyManager.getRandomProxy();
+
         this.browser = await chromium.launch({
             headless: true,
             channel: 'chrome',
@@ -30,7 +34,8 @@ class BaseBot {
                 '--disable-blink-features=AutomationControlled',
                 '--disable-features=IsolateOrigins,site-per-process',
                 '--disable-site-isolation-trials',
-            ]
+            ],
+            // proxy: proxyServer ? { server: proxyServer } : undefined
         });
         
         this.context = await this.browser.newContext({
@@ -47,7 +52,8 @@ class BaseBot {
             deviceScaleFactor: 1,
             colorScheme: 'light',
             reducedMotion: 'no-preference',
-            forcedColors: 'none'
+            forcedColors: 'none',
+            // proxy: proxyServer || undefined
         });
 
         this.page = await this.context.newPage();
@@ -90,15 +96,40 @@ class BaseBot {
     async monitorProducts(account, productUrls) {
         // Split URLs by comma and trim whitespace
         const urls = productUrls.split(',').map(url => url.trim());
+
+        // for (const url of urls) {
+        //     const page = await this.context.newPage();
+        //     const productInfo = await this.productService.checkProduct(url, page);
+        //     if (productInfo) {
+        //         await this.checkoutService.addToCart(page);
+        //         await this.checkoutService.checkout(account.Card, account.Address, page);
+        //         this.excelManager.logOrder(productInfo);
+        //     }
+        // }
         
-        for (const url of urls) {
-            const productInfo = await this.productService.checkProduct(url);
-            if (productInfo) {
-                await this.checkoutService.addToCart();
-                await this.checkoutService.checkout(account.Card, account.Address);
-                this.excelManager.logOrder(productInfo);
+        const concurrency = 4;
+        let index = 0;
+
+        const runOrder = async () => {
+            while (index < urls.length) {
+                const currentIndex = index++;
+                const url = urls[currentIndex];
+                const page = await this.context.newPage();
+                try {
+                    const productInfo = await this.productService.checkProduct(url, page);
+                    if (productInfo) {
+                        await this.checkoutService.addToCart(page);
+                        this.excelManager.logOrder(productInfo);
+                    }
+                } finally {
+                    await page.close();
+                }
             }
-        }
+        };
+
+        await Promise.all(Array(concurrency).fill(0).map(() => runOrder()));
+
+        await this.checkoutService.checkout(account.Card, account.Address, this.page);
     }
 
     async close() {

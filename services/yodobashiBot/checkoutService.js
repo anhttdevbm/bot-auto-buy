@@ -5,7 +5,8 @@ class CheckoutService {
         this.page = page;
     }
 
-    async addToCart() {
+    async addToCart(page) {
+        this.page = page;
         try {
             await this.page.click('#js_m_submitRelated');
             logger.info('Product added to cart');
@@ -16,15 +17,24 @@ class CheckoutService {
         }
     }
 
-    async checkout(paymentInfo, address) {
+    async checkout(paymentInfo, address, page) {
         try {
+            this.page = page;
+            await this.page.goto('https://order.yodobashi.com/yc/shoppingcart/index.html', {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+            });
             // Wait for and click "Proceed to Purchase" button
             await this.page.waitForSelector('text="購入手続きに進む"', { timeout: 30000 });
             await this.page.click('text="購入手続きに進む"');
 
             // Wait for and click "Next" button
-            await this.page.waitForSelector('text="次へ進む"', { timeout: 30000 });
-            await this.page.click('text="次へ進む"');
+            try {
+                await this.page.waitForSelector('text="次へ進む"', { timeout: 3000 });
+                await this.page.click('text="次へ進む"');
+            } catch (error) {
+                logger.info('No "次へ進む" button found');
+            }
 
             // Wait for and click "Confirm Order" button
             await this.page.waitForSelector('text="注文を確定する"', { timeout: 30000 });

@@ -102,6 +102,10 @@ class CheckoutService {
     async checkout(paymentInfo, address, password, yyyyMMdd = '19980205') {
         try {
             logger.info('Starting checkout process...');
+            await this.page.goto('https://basket.step.rakuten.co.jp/rms/mall/bs/cart/', {
+                waitUntil: 'domcontentloaded',
+                timeout: 6000,
+            });
             await this.page.waitForTimeout(1000);
             
             // Navigate to cart page

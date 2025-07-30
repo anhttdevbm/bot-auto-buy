@@ -1,14 +1,12 @@
 const { program } = require('commander');
-const path = require('path');
-const os = require('os');
 const { chromium } = require('playwright');
 const logger = require('./config/logger');
-const BaseBot = require('./services/baseBot');
 const BicCameraAuthService = require('./services/bicCamera/bicCameraAuthService');
 const BicCameraProductService = require('./services/bicCamera/bicCameraProductService');
 const BicCameraCheckoutService = require('./services/bicCamera/bicCameraCheckoutService');
 const SessionManager = require('./utils/sessionManager');
 const ExcelManager = require('./utils/excelManager');
+const ProxyManager = require('./config/proxyManager');
 
 class BicCameraBot {
     constructor(config) {
@@ -20,45 +18,19 @@ class BicCameraBot {
 
     async initialize() {
         try {
-            // // Get Chrome user data directory based on OS
-            // const userDataDir = path.join(os.homedir(), 'AppData', 'Local', 'Google', 'Chrome', 'User Data', 'Profile 1');
-            
-            // // Launch browser with persistent context
-            // this.context = await chromium.launchPersistentContext(userDataDir, {
-            //     headless: false,
-            //     // channel: 'chrome',
-            //     args: [
-            //         '--disable-web-security',
-            //         '--disable-features=IsolateOrigins,site-per-process',
-            //         '--disable-site-isolation-trials',
-            //         '--disable-setuid-sandbox',
-            //         '--no-sandbox',
-            //         '--disable-dev-shm-usage',
-            //         '--disable-accelerated-2d-canvas',
-            //         '--no-first-run',
-            //         '--no-zygote',
-            //         '--disable-gpu',
-            //         '--disable-blink-features=AutomationControlled'
-            //     ],
-            //     viewport: { width: 1920, height: 1080 },
-            //     locale: 'ja-JP',
-            //     timezoneId: 'Asia/Tokyo',
-            //     geolocation: { longitude: 139.7670, latitude: 35.6814 },
-            //     permissions: ['geolocation'],
-            //     ignoreHTTPSErrors: true,
-            //     bypassCSP: true,
-            //     hasTouch: true,
-            //     isMobile: false,
-            //     deviceScaleFactor: 1,
-            //     colorScheme: 'light',
-            //     reducedMotion: 'no-preference',
-            //     forcedColors: 'none'
-            // });
-            // Kết nối tới Chrome thật đã mở sẵn với remote debugging
             const browser = await chromium.connectOverCDP('http://localhost:9222');
-            this.context = browser.contexts()[0] || await browser.newContext();
+
+            const proxyManager = new ProxyManager();
+            const proxyServer = proxyManager.getRandomProxy();
+            
+            this.context = 
+                browser.contexts()[0] || 
+                await browser.newContext({
+                    proxy: proxyServer || undefined
+                });
+            
             this.page = await this.context.newPage();
-            // await this.setupPage();
+            // await this.page.goto('http://httpbin.org/ip', { waitUntil: 'domcontentloaded' });
 
             this.authService = new BicCameraAuthService(this.page);
             this.productService = new BicCameraProductService(this.page);
