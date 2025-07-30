@@ -24,7 +24,7 @@ class BicCameraBot {
             const proxyServer = proxyManager.getRandomProxy();
             
             this.context = 
-                browser.contexts()[0] || 
+                // browser.contexts()[0] || 
                 await browser.newContext({
                     proxy: proxyServer || undefined
                 });

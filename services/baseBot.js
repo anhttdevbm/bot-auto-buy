@@ -53,7 +53,7 @@ class BaseBot {
             colorScheme: 'light',
             reducedMotion: 'no-preference',
             forcedColors: 'none',
-            // proxy: proxyServer || undefined
+            proxy: proxyServer || undefined
         });
 
         this.page = await this.context.newPage();

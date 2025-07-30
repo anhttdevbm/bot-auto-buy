@@ -19,10 +19,10 @@ class PopMartBot extends BaseBot {
         const proxyManager = new ProxyManager();
         const proxyServer = proxyManager.getRandomProxy();
 
-        this.context = browser.contexts()[0] || await browser.newContext();
-        // this.context = await browser.newContext({
-        //     proxy: !proxyServer || undefined
-        // });
+        // this.context = browser.contexts()[0] || await browser.newContext();
+        this.context = await browser.newContext({
+            proxy: proxyServer || undefined
+        });
         this.page = await this.context.newPage();
         
         // Initialize Yodobashi-specific services
