@@ -129,8 +129,9 @@ class BaseBot {
                           status.toLowerCase().includes('purchased')
                         ) {
                           try {
-                            await this.discordNotifier.sendOrderNotification(
+                            const notificationResults = await this.discordNotifier.sendOrderNotificationToAll(
                               productInfo,
+                              account.Email,
                               status
                             );
                           } catch (discordError) {
