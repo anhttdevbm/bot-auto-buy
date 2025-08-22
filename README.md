@@ -37,6 +37,29 @@ Bot tự động mua hàng trên Yodobashi.com, BicCamera.com, PopMart.com và R
    - PopMart: `node popMartBot.js --excel popMart.xlsx`
    - Rakuten: `node rakutenBot.js --excel rakuten.xlsx`
 
+## Cấu hình Discord Webhook
+
+Bot hỗ trợ gửi thông báo realtime về Discord khi mua hàng thành công
+
+### Thiết lập Discord Webhook:
+
+1. Cấu hình Bot:
+   - Tạo file `.env` trong thư mục gốc của project
+   - Thêm dòng: `DISCORD_WEBHOOK_URL=your_webhook_url_here`
+   - Thêm dòng: `BOT_ICON_URL=your_bot_icon_url_here`
+
+2. Định dạng thông báo:
+   Bot sẽ gửi embed message với thông tin:
+   - Thành công: Màu xanh với thông tin sản phẩm đã mua
+   - Thông tin sản phẩm: Tên, giá, màu sắc, số lượng
+   - Hình ảnh: Thumbnail sản phẩm (nếu có)
+   - URL: Link đến sản phẩm
+
+3. Kiểm tra:
+   - Nếu không có Discord webhook URL, bot sẽ vẫn hoạt động bình thường
+   - Logs sẽ hiển thị "Discord webhook URL not configured" nếu chưa thiết lập
+   - Thông báo thất bại sẽ được ghi log nhưng không làm dừng bot
+
 ## Lưu ý quan trọng
 
 1. Đảm bảo:
@@ -65,7 +88,13 @@ npm install
 npx playwright install chromium
 ```
 
-3. Chạy trong chế độ development:
+3. Tạo file .env:
+```bash
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+BOT_ICON_URL=your_bot_icon_url_here
+```
+
+4. Chạy trong chế độ development:
 ```bash
 # Cho Yodobashi
 node yodobashiBot.js --excel yodobashi.xlsx
@@ -80,7 +109,7 @@ node popMartBot.js --excel popMart.xlsx
 node rakutenBot.js --excel rakuten.xlsx
 ```
 
-4. Cấu trúc project:
+5. Cấu trúc project:
 ```
 auto-buy-bot/
 ├── config/
@@ -93,7 +122,8 @@ auto-buy-bot/
 │   └── rakuten/           # Services cho Rakuten
 ├── utils/
 │   ├── sessionManager.js  # Quản lý session
-│   └── excelManager.js    # Xử lý file Excel
+│   ├── excelManager.js    # Xử lý file Excel
+│   └── discordNotifier.js # Gửi thông báo Discord
 ├── .env                   # Cấu hình môi trường
 ├── package.json          # Dependencies
 ├── yodobashiBot.js       # Bot Yodobashi
@@ -106,16 +136,18 @@ auto-buy-bot/
 └── rakuten.xlsx          # Cấu hình Rakuten
 ```
 
-5. Debug:
+6. Debug:
    - Logs được lưu trong thư mục `logs/`
    - Sử dụng `logger.debug()` để debug
    - Kiểm tra file `data/order_log.xlsx` để xem lịch sử đơn hàng
    - Kiểm tra file `error.log` để xem lỗi chi tiết
+   - Kiểm tra Discord webhook logs trong console
 
-6. Phát triển:
+7. Phát triển:
    - Thêm tính năng mới trong thư mục `services/`
    - Cập nhật cấu hình trong `config/`
    - Thêm utility functions trong `utils/`
+   - Mở rộng Discord notifications trong `utils/discordNotifier.js`
 
 ## Tính năng
 
@@ -126,6 +158,7 @@ auto-buy-bot/
 - Mã hóa dữ liệu nhạy cảm
 - Xử lý lỗi thông minh
 - Hỗ trợ nhiều website (Yodobashi, BicCamera, PopMart, Rakuten)
+- Thông báo Discord webhook
 
 ## Xử lý lỗi
 
@@ -143,6 +176,7 @@ Bot ghi log vào:
 - File Excel (data/order_log.xlsx)
 - File log chi tiết (logs/)
 - File error.log (lỗi chi tiết)
+- Discord Webhook (thông báo realtime - nếu được cấu hình)
 
 ## Khắc phục sự cố
 
@@ -164,6 +198,13 @@ Bot ghi log vào:
    - Kiểm tra các dependencies đã cài đặt đầy đủ chưa
    - Kiểm tra file config.xlsx có đúng định dạng không
    - Kiểm tra file error.log để xem lỗi chi tiết
+
+5. Nếu Discord webhook không hoạt động:
+   - Kiểm tra URL webhook có đúng định dạng không
+   - Kiểm tra Discord channel có quyền nhận webhook không
+   - Kiểm tra file .env hoặc environment variable DISCORD_WEBHOOK_URL
+   - Xem logs để kiểm tra thông báo "Discord webhook URL not configured"
+   - Test webhook bằng cách gửi tin nhắn thử từ Discord settings
 
 ## Hỗ trợ
 
