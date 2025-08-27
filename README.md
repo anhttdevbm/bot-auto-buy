@@ -37,6 +37,40 @@ Bot tự động mua hàng trên Yodobashi.com, BicCamera.com, PopMart.com và R
    - PopMart: `node popMartBot.js --excel popMart.xlsx`
    - Rakuten: `node rakutenBot.js --excel rakuten.xlsx`
 
+## Cấu hình Discord Webhook
+
+Bot hỗ trợ gửi thông báo realtime về Discord khi mua hàng thành công với 2 loại thông báo:
+- **Server chung**: Thông báo tổng quan cho tất cả admin
+- **Server cá nhân**: Thông báo được cá nhân hóa cho từng user
+
+### Thiết lập Discord Webhook:
+
+#### 1. Cấu hình Server Chung:
+   - Tạo file `.env` trong thư mục gốc của project
+   - Thêm dòng: `DISCORD_WEBHOOK_URL=your_general_webhook_url_here`
+   - Thêm dòng: `BOT_ICON_URL=your_bot_icon_url_here`
+
+#### 2. Cấu hình Server Cá Nhân:
+
+**Sử dụng Environment Variables (Bảo mật cao)**
+   - Thêm vào file `.env`:
+   ```bash
+   # Discord webhooks cho từng user cá nhân
+   USER_DISCORD_MAPPING_user_domain_com=https://discord.com/api/webhooks/USER_WEBHOOK_ID/USER_WEBHOOK_TOKEN
+   ```
+
+**Lưu ý:**
+   - Thay `@` bằng `_` và `.` bằng `_` trong environment variable names
+   - VD: `user1@example.com` → `USER_DISCORD_MAPPING_user1_example_com`
+   - Bot sẽ tự động convert về format email đúng
+   - Bot sẽ hiển thị email làm tên user trong Discord
+
+### Kiểm tra:
+   - Bot sẽ tự động gửi đến cả 2 server (nếu được cấu hình)
+   - Logs hiển thị kết quả gửi từng loại thông báo
+   - Nếu một server thất bại, server còn lại vẫn nhận được thông báo
+   - Bot vẫn hoạt động bình thường ngay cả khi không có Discord webhook nào
+
 ## Lưu ý quan trọng
 
 1. Đảm bảo:
@@ -65,7 +99,20 @@ npm install
 npx playwright install chromium
 ```
 
-3. Chạy trong chế độ development:
+3. Tạo file .env:
+```bash
+# Discord webhook cho server chung
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+BOT_ICON_URL=your_bot_icon_url_here
+
+# Discord webhook cho user cá nhân (dùng underscore)
+USER_DISCORD_MAPPING_user_example_com=https://discord.com/api/webhooks/USER_WEBHOOK_ID/USER_WEBHOOK_TOKEN
+```
+
+4. Cấu hình Discord webhook cá nhân:
+   - Thêm environment variables vào file `.env` theo format trên
+
+5. Chạy trong chế độ development:
 ```bash
 # Cho Yodobashi
 node yodobashiBot.js --excel yodobashi.xlsx
@@ -80,7 +127,7 @@ node popMartBot.js --excel popMart.xlsx
 node rakutenBot.js --excel rakuten.xlsx
 ```
 
-4. Cấu trúc project:
+6. Cấu trúc project:
 ```
 auto-buy-bot/
 ├── config/
@@ -93,7 +140,9 @@ auto-buy-bot/
 │   └── rakuten/           # Services cho Rakuten
 ├── utils/
 │   ├── sessionManager.js  # Quản lý session
-│   └── excelManager.js    # Xử lý file Excel
+│   ├── excelManager.js    # Xử lý file Excel
+│   ├── discordNotifier.js # Gửi thông báo Discord (server chung + cá nhân)
+│   └── userDiscordManager.js # Quản lý mapping Discord cá nhân
 ├── .env                   # Cấu hình môi trường
 ├── package.json          # Dependencies
 ├── yodobashiBot.js       # Bot Yodobashi
@@ -106,16 +155,19 @@ auto-buy-bot/
 └── rakuten.xlsx          # Cấu hình Rakuten
 ```
 
-5. Debug:
+6. Debug:
    - Logs được lưu trong thư mục `logs/`
    - Sử dụng `logger.debug()` để debug
    - Kiểm tra file `data/order_log.xlsx` để xem lịch sử đơn hàng
    - Kiểm tra file `error.log` để xem lỗi chi tiết
+   - Kiểm tra Discord webhook logs trong console
 
-6. Phát triển:
+7. Phát triển:
    - Thêm tính năng mới trong thư mục `services/`
    - Cập nhật cấu hình trong `config/`
    - Thêm utility functions trong `utils/`
+   - Mở rộng Discord notifications trong `utils/discordNotifier.js`
+   - Quản lý Discord cá nhân trong `utils/userDiscordManager.js`
 
 ## Tính năng
 
@@ -126,6 +178,7 @@ auto-buy-bot/
 - Mã hóa dữ liệu nhạy cảm
 - Xử lý lỗi thông minh
 - Hỗ trợ nhiều website (Yodobashi, BicCamera, PopMart, Rakuten)
+- Thông báo Discord webhook (server chung + cá nhân cho từng user)
 
 ## Xử lý lỗi
 
@@ -143,6 +196,7 @@ Bot ghi log vào:
 - File Excel (data/order_log.xlsx)
 - File log chi tiết (logs/)
 - File error.log (lỗi chi tiết)
+- Discord Webhook (thông báo realtime đến server chung + cá nhân - nếu được cấu hình)
 
 ## Khắc phục sự cố
 
@@ -164,6 +218,16 @@ Bot ghi log vào:
    - Kiểm tra các dependencies đã cài đặt đầy đủ chưa
    - Kiểm tra file config.xlsx có đúng định dạng không
    - Kiểm tra file error.log để xem lỗi chi tiết
+
+5. Nếu Discord webhook không hoạt động:
+   - **Server chung**: Kiểm tra DISCORD_WEBHOOK_URL trong file .env
+   - **Server cá nhân**: Kiểm tra environment variables USER_DISCORD_MAPPING_*
+   - Kiểm tra format email trong env vars (dùng underscore thay @ và .)
+   - Kiểm tra URL webhook có đúng định dạng không
+   - Kiểm tra Discord channel có quyền nhận webhook không
+   - Xem logs để kiểm tra kết quả gửi thông báo từng loại
+   - Test webhook bằng cách gửi tin nhắn thử từ Discord settings
+   - Đảm bảo email trong Excel trùng với email trong environment variables
 
 ## Hỗ trợ
 

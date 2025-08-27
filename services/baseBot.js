@@ -4,6 +4,7 @@ const logger = require('../config/logger');
 const SessionManager = require('../utils/sessionManager');
 const ExcelManager = require('../utils/excelManager');
 const ProxyManager = require('../config/proxyManager');
+const DiscordNotifier = require('../utils/discordNotifier');
 require('dotenv').config();
 
 class BaseBot {
@@ -11,6 +12,7 @@ class BaseBot {
         this.config = config;
         this.sessionManager = new SessionManager();
         this.excelManager = new ExcelManager(config.excel);
+        this.discordNotifier = new DiscordNotifier(process.env.DISCORD_WEBHOOK_URL);
     }
 
     async initialize() {
@@ -119,7 +121,26 @@ class BaseBot {
                     const productInfo = await this.productService.checkProduct(url, page);
                     if (productInfo) {
                         await this.checkoutService.addToCart(page);
-                        this.excelManager.logOrder(productInfo);
+                        const status = 'Purchased';
+                        this.excelManager.logOrder(productInfo, status);
+
+                        // Send Discord notification if purchase was successful
+                        if (
+                          status.toLowerCase().includes('purchased')
+                        ) {
+                          try {
+                            const notificationResults = await this.discordNotifier.sendOrderNotificationToAll(
+                              productInfo,
+                              account.Email,
+                              status
+                            );
+                          } catch (discordError) {
+                            logger.warn(
+                              'Discord notification failed, but order logging continued:',
+                              discordError
+                            );
+                          }
+                        }
                     }
                 } finally {
                     await page.close();
