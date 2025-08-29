@@ -238,15 +238,357 @@ Nếu cần hỗ trợ thêm, vui lòng:
 4. Chụp ảnh màn hình lỗi
 5. Liên hệ hỗ trợ với thông tin chi tiết 
 
-## Run the Dashboard (Python GUI)
+## Hướng dẫn chạy API Server
 
-1. Make sure you have Python 3.x installed (if not using the .exe version).
-2. Install required libraries:
-   ```bash
-   pip install pandas openpyxl
-   ```
-3. Run the dashboard:
-   ```bash
-   python dashboard.py
-   ```
-   (Or double-click `dashboard.exe` if you have the packaged version) 
+Bot hỗ trợ chế độ API server để quản lý và điều khiển bot thông qua RESTful API.
+
+### 1. Cài đặt và khởi động API Server:
+
+```bash
+# Cài đặt dependencies
+npm install
+
+# Chạy server trong chế độ development
+npm run dev
+
+# Hoặc chạy server trong chế độ production
+npm start
+```
+
+Server sẽ chạy trên: `http://localhost:3000`
+
+### 2. Tài khoản mặc định:
+- **Email**: `admin@autobuybot.com`
+- **Password**: `admin123`
+- **Role**: `admin`
+
+### 3. API Endpoints chính:
+
+#### Authentication:
+- `POST /api/auth/login` - Đăng nhập
+- `POST /api/auth/logout` - Đăng xuất
+- `GET /api/auth/profile` - Xem thông tin profile
+- `PUT /api/auth/profile` - Cập nhật profile
+
+#### User Management (Admin only):
+- `GET /api/users` - Danh sách users
+- `POST /api/users` - Tạo user mới
+- `PUT /api/users/:id` - Cập nhật user
+- `DELETE /api/users/:id` - Xóa user
+
+#### Bot Control:
+- `GET /api/bots/status` - Trạng thái bots
+- `POST /api/bots/:botType/start` - Khởi động bot
+- `POST /api/bots/:botType/stop` - Dừng bot
+- `POST /api/bots/stop-all` - Dừng tất cả bots (Admin only)
+
+#### Health Check:
+- `GET /health` - Kiểm tra trạng thái server
+
+### 4. Phân quyền (RBAC):
+- **Admin**: Toàn quyền quản lý users, bots, orders
+- **Staff**: Quản lý bot accounts, orders, chạy bots
+- **Viewer**: Chỉ xem orders và dashboard
+
+## Hướng dẫn chạy Dashboard (Python GUI)
+
+Dashboard hỗ trợ 2 chế độ hoạt động:
+- **Standalone mode**: Chạy độc lập không cần API server
+- **API mode**: Kết nối với API server để quản lý đầy đủ
+
+### 1. Cài đặt Python và dependencies:
+
+```bash
+# Cài đặt Python 3.8+ từ python.org
+
+# Cài đặt thư viện cần thiết
+pip install pandas openpyxl requests tkinter
+```
+
+### 2. Chạy Dashboard:
+
+```bash
+# Chạy dashboard
+python dashboard.py
+```
+
+### 3. Chế độ hoạt động:
+
+#### Standalone Mode (Không có API server):
+- Quản lý bot trực tiếp thông qua file .bat
+- Xem order log từ file Excel
+- Không cần đăng nhập
+
+#### API Mode (Có API server):
+- Yêu cầu đăng nhập với tài khoản admin/staff
+- Quản lý users, bots thông qua API
+- Điều khiển bot từ xa
+- Phân quyền theo role
+
+### 4. Tính năng Dashboard:
+- **Bot Control**: Khởi động/dừng bots
+- **Order Management**: Xem lịch sử đơn hàng
+- **User Management**: Quản lý users (Admin only)
+- **Real-time Status**: Theo dõi trạng thái bot realtime
+
+## Setup Database
+
+Hệ thống sử dụng SQLite để lưu trữ dữ liệu users, permissions, và sessions.
+
+### 1. Database tự động khởi tạo:
+Database sẽ được tự động tạo khi lần đầu chạy API server tại: `data/app.db`
+
+### 2. Cấu trúc Database:
+
+#### Bảng Users:
+```sql
+users (
+    id INTEGER PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role TEXT DEFAULT 'viewer',
+    first_name TEXT,
+    last_name TEXT,
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME,
+    updated_at DATETIME,
+    last_login DATETIME
+)
+```
+
+#### Bảng Bot Accounts:
+```sql
+bot_accounts (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    platform TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    card_info TEXT,
+    address_info TEXT,
+    is_active BOOLEAN DEFAULT 1,
+    created_at DATETIME,
+    updated_at DATETIME
+)
+```
+
+#### Bảng Orders:
+```sql
+orders (
+    id INTEGER PRIMARY KEY,
+    bot_account_id INTEGER,
+    platform TEXT NOT NULL,
+    product_name TEXT,
+    product_url TEXT,
+    price TEXT,
+    status TEXT DEFAULT 'pending',
+    error_message TEXT,
+    created_at DATETIME,
+    completed_at DATETIME
+)
+```
+
+### 3. Permissions & Roles:
+Hệ thống RBAC được cấu hình tự động với 3 roles:
+- **admin**: Toàn quyền
+- **staff**: Quản lý bots và orders
+- **viewer**: Chỉ xem
+
+### 4. Backup Database:
+```bash
+# Backup database
+cp data/app.db data/app_backup_$(date +%Y%m%d).db
+
+# Restore database
+cp data/app_backup_20231201.db data/app.db
+```
+
+## Biến môi trường (Environment Variables)
+
+Tạo file `.env` trong thư mục gốc của project với các biến sau:
+
+### 1. File .env mẫu:
+
+```bash
+# ======================
+# SERVER CONFIGURATION
+# ======================
+PORT=3000
+NODE_ENV=development
+
+# ======================
+# DATABASE CONFIGURATION
+# ======================
+DB_PATH=./data/app.db
+
+# ======================
+# JWT CONFIGURATION  
+# ======================
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# ======================
+# DISCORD WEBHOOKS
+# ======================
+# Discord webhook cho server chung (thông báo tổng quan)
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+
+# Icon cho bot Discord
+BOT_ICON_URL=https://example.com/bot-icon.png
+
+# Discord webhook cho user cá nhân (format: USER_DISCORD_MAPPING_{email_with_underscores})
+# Thay @ bằng _ và . bằng _ trong email
+# VD: user1@example.com → USER_DISCORD_MAPPING_user1_example_com
+USER_DISCORD_MAPPING_user1_example_com=https://discord.com/api/webhooks/USER1_WEBHOOK_ID/USER1_WEBHOOK_TOKEN
+USER_DISCORD_MAPPING_user2_gmail_com=https://discord.com/api/webhooks/USER2_WEBHOOK_ID/USER2_WEBHOOK_TOKEN
+
+# ======================
+# CAPTCHA CONFIGURATION
+# ======================
+# 2Captcha API key (tùy chọn)
+CAPTCHA_API_KEY=your-2captcha-api-key
+
+# ======================
+# PROXY CONFIGURATION
+# ======================
+# Proxy settings (tùy chọn)
+USE_PROXY=false
+PROXY_FILE=./config/proxies.txt
+
+# ======================
+# RATE LIMITING
+# ======================
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# ======================
+# SECURITY
+# ======================
+# CORS origins (phân cách bằng dấu phẩy)
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000
+
+# Session secret
+SESSION_SECRET=your-session-secret-change-this
+
+# ======================
+# BOT CONFIGURATION
+# ======================
+# Bot monitoring intervals (seconds)
+YODOBASHI_MONITOR_INTERVAL=60
+BICCAMERA_MONITOR_INTERVAL=60  
+POPMART_MONITOR_INTERVAL=60
+RAKUTEN_MONITOR_INTERVAL=60
+
+# Maximum retry attempts
+MAX_RETRY_ATTEMPTS=3
+
+# Timeout settings (milliseconds)
+PAGE_TIMEOUT=30000
+REQUEST_TIMEOUT=10000
+
+# ======================
+# LOGGING
+# ======================
+LOG_LEVEL=info
+LOG_FILE_MAX_SIZE=10mb
+LOG_FILE_MAX_FILES=5
+
+# ======================
+# EMAIL NOTIFICATIONS (Tùy chọn)
+# ======================
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+EMAIL_FROM=Auto Buy Bot <your-email@gmail.com>
+```
+
+### 2. Biến môi trường quan trọng:
+
+#### Bắt buộc:
+- `JWT_SECRET`: Secret key cho JWT tokens
+- `DISCORD_WEBHOOK_URL`: Discord webhook chung
+
+#### Khuyến nghị:
+- `NODE_ENV`: `development` hoặc `production`
+- `PORT`: Port chạy server (mặc định 3000)
+- `USER_DISCORD_MAPPING_*`: Discord webhooks cá nhân
+
+#### Tùy chọn:
+- `CAPTCHA_API_KEY`: 2Captcha API key
+- `USE_PROXY`: Sử dụng proxy
+- Email SMTP settings
+
+### 3. Bảo mật:
+- **KHÔNG** commit file `.env` vào Git
+- Thêm `.env` vào `.gitignore`
+- Sử dụng secret keys mạnh cho production
+- Thay đổi tất cả passwords mặc định
+
+### 4. Validation:
+Bot sẽ tự động kiểm tra các biến môi trường quan trọng khi khởi động và cảnh báo nếu thiếu.
+
+## Hướng dẫn tạo file .env
+
+### 1. Tạo file .env từ template:
+
+Copy nội dung sau vào file `.env` trong thư mục gốc:
+
+```bash
+# Copy và sửa file này thành .env
+cp .env.example .env
+
+# Hoặc tạo mới file .env với nội dung mẫu ở trên
+```
+
+### 2. Cấu hình cần thiết:
+
+#### Bước 1: JWT Secret (Bắt buộc)
+```bash
+# Thay thế bằng secret key mạnh
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+```
+
+#### Bước 2: Discord Webhook (Khuyến nghị)
+```bash
+# Webhook server chung
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+
+# Webhook cá nhân cho từng user
+USER_DISCORD_MAPPING_user_example_com=https://discord.com/api/webhooks/USER_WEBHOOK_ID/USER_WEBHOOK_TOKEN
+```
+
+#### Bước 3: Cấu hình khác (Tùy chọn)
+```bash
+# Port server
+PORT=3000
+
+# Environment
+NODE_ENV=development
+
+# 2Captcha API (nếu cần)
+CAPTCHA_API_KEY=your-2captcha-api-key
+```
+
+### 3. Quick Start .env:
+
+File .env tối thiểu để bắt đầu:
+
+```bash
+# Minimum .env file
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=my-super-secret-jwt-key-for-development
+```
+
+### 4. Production .env:
+
+Cho production, cần thêm:
+
+```bash
+NODE_ENV=production
+JWT_SECRET=very-strong-secret-key-for-production
+DISCORD_WEBHOOK_URL=your-production-webhook
+CORS_ORIGINS=https://yourdomain.com
+``` 
