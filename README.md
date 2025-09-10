@@ -592,3 +592,8 @@ JWT_SECRET=very-strong-secret-key-for-production
 DISCORD_WEBHOOK_URL=your-production-webhook
 CORS_ORIGINS=https://yourdomain.com
 ``` 
+
+### 5. Cấu hình dashboard
+
+Đổi link API_BASE_URL trỏ tới server
+Ví dụ: http://38.102.9.71:3000/api
